@@ -1,0 +1,95 @@
+local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wall%20v3')))()
+
+local w = library:CreateWindow("Rpg Gaem") -- Creates the window
+
+local b = w:CreateFolder("Main") -- Creates the folder(U will put here your buttons,etc)
+local c = w:CreateFolder("Extra") -- Creates the folder(U will put here your buttons,etc)
+
+
+b:Label("For almost cyan kit rpg",{
+    TextSize = 25; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(69,69,69); -- Self Explaining
+
+}) 
+
+b:Button("Dmg multiple",function()
+local settings = {repeatamount = 100, inclusions = {"SayMessageRequest"}}
+
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+setreadonly(mt, false)
+
+local function isincluded(memes)
+   for i,o in next, settings.inclusions do
+       if memes.Name == o then
+           return true
+       end
+   end
+   return false
+end
+
+mt.__namecall = function(memes, ...)
+   local args = {...}
+   local method = getnamecallmethod()
+   if method == "FireServer" or method == "InvokeServer" and isincluded(memes) then
+       for i = 1,settings.repeatamount do
+           old(memes, ...)
+       end
+   end
+   return old(memes, ...)
+end
+
+setreadonly(mt, true)
+end)
+
+c:Button("Rejoin",function()
+local TeleportService = game:GetService("TeleportService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local Rejoin = coroutine.create(function()
+    local Success, ErrorMessage = pcall(function()
+        TeleportService:Teleport(game.PlaceId, LocalPlayer)
+    end)
+
+    if ErrorMessage and not Success then
+        warn(ErrorMessage)
+    end
+end)
+
+coroutine.resume(Rejoin)
+end)
+
+b:Button("Get all weapon",function()
+local RS = game:GetService("ReplicatedStorage")
+
+for Index, Variable in pairs(RS.GameItems:GetChildren()) do
+ game:GetService("ReplicatedStorage").GameRemotes.BuyEvent:FireServer(Variable.Name)
+end
+end)
+
+c:Button("iy yeild",function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+c:Slider("walkspeed",{
+    min = 16; -- min value of the slider
+    max = 1000; -- max value of the slider
+    precise = true; -- max 2 decimals
+},function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+end)
+
+c:Slider("Jumppower",{
+    min = 50; -- min value of the slider
+    max = 1000; -- max value of the slider
+    precise = true; -- max 2 decimals
+},function(value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
+end)
+
+c:Button("ServerHops",function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/KeoneGithub/KeoneGithub/main/ServerHopperUniversal"))()
+end)
+
+b:DestroyGui()
